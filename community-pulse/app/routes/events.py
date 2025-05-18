@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 
-event_bp = Blueprint('event', __name__, url_prefix='/events')
+events_bp = Blueprint('event', __name__, url_prefix='/events')
 
 @event_bp.route('/<int:event_id>')
 def event_detail(event_id):
