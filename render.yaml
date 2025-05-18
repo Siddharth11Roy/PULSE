@@ -2,8 +2,8 @@ services:
   - type: web
     name: flask-event-app
     env: python
-    buildCommand: ""
-    startCommand: gunicorn run:app
+    buildCommand: "cd community-pulse && pip install -r requirements.txt"
+    startCommand: "cd community-pulse && gunicorn run:app"
     envVars:
       - key: FLASK_ENV
         value: production
@@ -15,3 +15,4 @@ services:
         value: your-email-password
       - key: SQLALCHEMY_DATABASE_URI
         value: your-database-uri
+
