@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask_mail import Mail
 
+
 from dotenv import load_dotenv
 import os
 
@@ -24,11 +25,12 @@ def create_app():
     mail.init_app(app)
     cors.init_app(app)
     
-    from .routes.home import home_bp
-    from .routes.auth import auth
+   
         
-    app.register_blueprint(home_bp)
-    app.register_blueprint(auth, url_prefix='/auth')
+    # app.register_blueprint(home_bp)
+    # app.register_blueprint(auth, url_prefix='/auth')
+    from .routes import register_blueprints
+    register_blueprints(app)
 
    
     

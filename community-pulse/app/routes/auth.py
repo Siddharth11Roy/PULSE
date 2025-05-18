@@ -2,14 +2,16 @@
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import generate_password_hash,check_password_hash
-from .. import db
-from ..models.user import User 
 
 
-auth = Blueprint('auth', __name__)
 
-@auth.route('/signup', methods=['GET', 'POST'])
+
+auth_bp = Blueprint('auth', __name__)
+
+@auth_bp.route('/signup', methods=['GET', 'POST'])
 def signup():
+    from .. import db
+    from ..models.user import User 
     if request.method == 'POST':
         username = request.form['username'].strip()
         email = request.form['email'].strip().lower()
@@ -41,8 +43,10 @@ def signup():
 
     return render_template("signup.html")
 
-@auth.route('/login', methods=['GET', 'POST'])
+@auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    from .. import db
+    from ..models.user import User 
     if request.method == 'POST':
         email_or_username = request.form['email_or_username'].strip().lower()
         password = request.form['password']
