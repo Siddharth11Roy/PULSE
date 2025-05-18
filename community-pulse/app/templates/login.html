@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Login | Community Pulse</title>
+    <style>
+        /* Reset some default */
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: white;
+            padding: 2.5rem 3rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 350px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            margin-bottom: 1.2rem;
+            border: 1.5px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease-in-out;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 5px rgba(59,130,246,0.5);
+        }
+
+        button {
+            width: 100%;
+            padding: 0.7rem;
+            background-color: #3b82f6;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #2563eb;
+        }
+
+        p {
+            margin-top: 1.2rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #ef4444; /* red-500 */
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+
+        {% if error %}
+            <p class="error-message">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST">
+            <label for="email_or_username">Email or Username:</label>
+            <input type="text" name="email_or_username" id="email_or_username" required />
+
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required />
+
+            <button type="submit">Log In</button>
+        </form>
+
+        <p>Don't have an account? <a href="{{ url_for('auth.signup') }}">Sign up</a></p>
+    </div>
+</body>
+</html>

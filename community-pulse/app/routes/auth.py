@@ -1,7 +1,7 @@
 # routes/auth.py
 
-from flask import Blueprint, render_template, request, redirect, url_for, flash
-from werkzeug.security import generate_password_hash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from werkzeug.security import generate_password_hash,check_password_hash
 from .. import db
 from ..models.user import User 
 
@@ -43,4 +43,20 @@ def signup():
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    if request.method == 'POST':
+        email_or_username = request.form['email_or_username'].strip().lower()
+        password = request.form['password']
+
+        # Look for user by username or email
+        user = User.query.filter(
+            (User.email == email_or_username) | (User.username == email_or_username)
+        ).first()
+
+        if user and check_password_hash(user.password, password):
+            session['user_id'] = user.id
+            session['username'] = user.username
+            return redirect("/")  
+        else:
+            return render_template("login.html", error="Invalid credentials.")
+
+    return render_template("login.html")
