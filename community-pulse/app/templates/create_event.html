@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+<!-- {% extends 'base.html' %}
 {% block content %}
 <h2>Create New Event</h2>
 <form method="POST" action="{{ url_for('event.create_event') }}">
@@ -10,4 +10,300 @@
   <button type="submit">Create</button>
 </form>
 {% endblock %}
+ -->
+{% extends 'base.html' %}
 
+{% block extra_css %}
+<style>
+  .create-event-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 2rem;
+  }
+  
+  .form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .form-header h2 {
+    color: var(--dark-color);
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-header p {
+    color: #666;
+  }
+  
+  .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -10px;
+  }
+  
+  .form-column {
+    flex: 1;
+    padding: 0 10px;
+    min-width: 250px;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #444;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: var(--transition);
+  }
+  
+  .form-control:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  }
+  
+  textarea.form-control {
+    min-height: 150px;
+    resize: vertical;
+  }
+  
+  .category-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 0.5rem;
+  }
+  
+  .category-item {
+    flex: 0 0 auto;
+  }
+  
+  .category-item input[type="radio"] {
+    display: none;
+  }
+  
+  .category-item label {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border: 2px solid #ddd;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: normal;
+  }
+  
+  .category-item input[type="radio"]:checked + label {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+  }
+  
+  .btn-create {
+    background-color: var(--secondary-color);
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+  }
+  
+  .btn-create:hover {
+    background-color: #27ae60;
+  }
+  
+  .form-tips {
+    background-color: #f7f9fc;
+    border-left: 4px solid var(--primary-color);
+    padding: 1rem;
+    margin-top: 2rem;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+  }
+  
+  .form-tips h3 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+  
+  .form-tips ul {
+    padding-left: 1.5rem;
+    margin-bottom: 0;
+  }
+  
+  .form-tips li {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    color: #555;
+  }
+  
+  @media (max-width: 768px) {
+    .form-column {
+      flex: 100%;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Create New Event</h1>
+  <p>Share your event with the community</p>
+</div>
+
+<div class="create-event-container">
+  <div class="form-header">
+    <h2>Event Details</h2>
+    <p>Complete the form below to create a new community event</p>
+  </div>
+  
+  <form method="POST" action="{{ url_for('event.create_event') }}" id="create-event-form">
+    <div class="form-row">
+      <div class="form-column">
+        <div class="form-group">
+          <label for="title">Event Title <span class="text-danger">*</span></label>
+          <input type="text" id="title" name="title" class="form-control" placeholder="Enter a descriptive title" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Event Category <span class="text-danger">*</span></label>
+          <div class="category-selector">
+            <div class="category-item">
+              <input type="radio" id="cat-workshop" name="category" value="Workshop" required>
+              <label for="cat-workshop">Workshop</label>
+            </div>
+            <div class="category-item">
+              <input type="radio" id="cat-seminar" name="category" value="Seminar">
+              <label for="cat-seminar">Seminar</label>
+            </div>
+            <div class="category-item">
+              <input type="radio" id="cat-meeting" name="category" value="Meeting">
+              <label for="cat-meeting">Meeting</label>
+            </div>
+            <div class="category-item">
+              <input type="radio" id="cat-social" name="category" value="Social">
+              <label for="cat-social">Social</label>
+            </div>
+            <div class="category-item">
+              <input type="radio" id="cat-other" name="category" value="Other">
+              <label for="cat-other">Other</label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="location">Location <span class="text-danger">*</span></label>
+          <input type="text" id="location" name="location" class="form-control" placeholder="Event venue or address" required>
+        </div>
+      </div>
+      
+      <div class="form-column">
+        <div class="form-group">
+          <label for="event_date">Event Date and Time <span class="text-danger">*</span></label>
+          <input type="datetime-local" id="event_date" name="event_date" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="description">Event Description <span class="text-danger">*</span></label>
+          <textarea id="description" name="description" class="form-control" placeholder="Provide details about your event" required></textarea>
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-tips">
+      <h3><i class="fas fa-lightbulb"></i> Tips for Success</h3>
+      <ul>
+        <li>Use a clear, descriptive title that tells people what to expect</li>
+        <li>Include all important details in your description (schedule, speakers, etc.)</li>
+        <li>Double-check your date, time, and location details</li>
+      </ul>
+    </div>
+    
+    <div class="form-actions">
+      <a href="{{ url_for('event.event_list') }}" class="btn btn-outline">Cancel</a>
+      <button type="submit" class="btn btn-create">Create Event</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  $(document).ready(function() {
+    // Set default date to tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(18, 0, 0, 0);
+    
+    const dateString = tomorrow.toISOString().slice(0, 16);
+    $('#event_date').val(dateString);
+    
+    // Form validation and submission effects
+    $('#create-event-form').on('submit', function(e) {
+      const title = $('#title').val().trim();
+      const desc = $('#description').val().trim();
+      
+      if (title.length < 5) {
+        e.preventDefault();
+        alert('Please enter a more descriptive title (at least 5 characters)');
+        $('#title').focus();
+        return false;
+      }
+      
+      if (desc.length < 20) {
+        e.preventDefault();
+        alert('Please provide a more detailed description (at least 20 characters)');
+        $('#description').focus();
+        return false;
+      }
+      
+      // Visual feedback on submit
+      const submitBtn = $(this).find('button[type="submit"]');
+      submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Creating...');
+      submitBtn.prop('disabled', true);
+      
+      // Let form submit after a brief delay for visual feedback
+      setTimeout(() => {
+        submitBtn.prop('disabled', false);
+      }, 500);
+    });
+    
+    // Character counter for description
+    $('#description').on('input', function() {
+      const currentLength = $(this).val().length;
+      if ($(this).next('.char-counter').length === 0) {
+        $(this).after('<div class="char-counter" style="text-align: right; font-size: 0.85rem; color: #666;"></div>');
+      }
+      
+      const counter = $(this).next('.char-counter');
+      counter.text(`${currentLength} characters`);
+      
+      if (currentLength < 20) {
+        counter.css('color', '#e74c3c');
+      } else {
+        counter.css('color', '#666');
+      }
+    });
+  });
+</script>
+{% endblock %}
