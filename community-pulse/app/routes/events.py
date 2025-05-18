@@ -5,9 +5,6 @@ from app.models.event import Event        # If you're rendering event details
 
 events_bp = Blueprint('event', __name__, url_prefix='/events')
 
-
-events_bp = Blueprint('event', __name__, url_prefix='/events')
-
 @events_bp.route('/create', methods=['GET', 'POST'])
 def create_event():
     if request.method == 'POST':
