@@ -13,7 +13,7 @@ def create_event():
             description=request.form['description'],
             category=request.form['category'],
             location=request.form['location'],
-            event_date=request.form['event_date']
+            date=request.form['date']
         )
         db.session.add(new_event)
         db.session.commit()
