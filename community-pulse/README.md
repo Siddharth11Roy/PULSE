@@ -5,3 +5,4 @@
 ### Routes
 
 `/auth/signup` : sign-up page, adds user to the User DB
+`/auth/login`: login page
