@@ -1,4 +1,10 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, request, render_template, redirect, url_for, flash
+from app import db
+from app.models.interest import Interest  # Import your model
+from app.models.event import Event        # If you're rendering event details
+
+events_bp = Blueprint('event', __name__, url_prefix='/events')
+
 
 events_bp = Blueprint('event', __name__, url_prefix='/events')
 
