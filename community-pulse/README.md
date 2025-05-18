@@ -6,3 +6,5 @@
 
 `/auth/signup` : sign-up page, adds user to the User DB
 `/auth/login`: login page
+
+https://odoo-team-69.onrender.com/
