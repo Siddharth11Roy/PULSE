@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: flask-event-app
+    env: python
+    buildCommand: ""
+    startCommand: gunicorn run:app
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        value: your-secret-key
+      - key: MAIL_USERNAME
+        value: your-email@example.com
+      - key: MAIL_PASSWORD
+        value: your-email-password
+      - key: SQLALCHEMY_DATABASE_URI
+        value: your-database-uri
+
