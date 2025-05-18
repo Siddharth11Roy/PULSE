@@ -6,8 +6,6 @@
 <p>Location: {{ event.location }}</p>
 <p>Date: {{ event.event_date }}</p>
 {% endblock %}
-
-
 <h2>Register Interest</h2>
 <form method="POST" action="{{ url_for('event.register_interest', event_id=event_id) }}">
   <input type="text" name="name" placeholder="Your Name" required><br>
