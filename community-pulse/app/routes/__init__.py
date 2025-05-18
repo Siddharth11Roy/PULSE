@@ -1,12 +1,8 @@
-from flask import Flask
+# route/home.py
+from flask import Blueprint, render_template
 
-def create_app():
-    app = Flask(_name_)
+home_bp = Blueprint('home', __name__)
 
-    # Import blueprint
-    from .route.home import home_bp
-
-    # Register blueprint
-    app.register_blueprint(home_bp)
-
-    return app
+@home_bp.route('/')
+def home():
+    return "Welcome to Home Page!"
