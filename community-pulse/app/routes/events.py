@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template
 
+events_bp = Blueprint('event', __name__, url_prefix='/events')
+
 @events_bp.route('/create', methods=['GET', 'POST'])
 def create_event():
     if request.method == 'POST':
