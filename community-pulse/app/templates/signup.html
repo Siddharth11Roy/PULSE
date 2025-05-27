@@ -1,90 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Sign Up</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <meta charset="UTF-8">
+  <title>Sign Up | Community Pulse</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f9d3ff, #d3f1ff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animated full-page bubbles */
+    .bubbles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .bubbles span {
+      position: absolute;
+      display: block;
+      bottom: -150px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      animation: floatUp 20s linear infinite;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(0.8);
+        opacity: 0.4;
+      }
+      100% {
+        transform: translateY(-120vh) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    /* Glowing heading */
+    .glow-heading {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 0 5px #f9a8d4, 0 0 15px #60a5fa;
+      animation: glow 2s ease-in-out infinite alternate;
+      text-align: center;
+      margin-bottom: 2rem;
+      z-index: 2;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 5px #f9a8d4, 0 0 10px #60a5fa, 0 0 20px #60a5fa;
+      }
+      to {
+        text-shadow: 0 0 15px #ec4899, 0 0 30px #3b82f6;
+      }
+    }
+
+    .signup-card {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2.5rem 2rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 500px;
+      position: relative;
+      z-index: 2;
+      animation: slideIn 1s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(40px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, #ec4899, #3b82f6);
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(to right, #db2777, #2563eb);
+    }
+
+    a {
+      color: #ec4899;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
-<body class="bg-light">
+<body>
 
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-    <div class="card shadow p-4" style="min-width: 350px; width: 100%; max-width: 500px;">
-        <h3 class="mb-4 text-center">Create Your Account</h3>
+  <!-- Floating Background Bubbles -->
+  <div class="bubbles">
+    <!-- Manually create varied bubble styles -->
+    <span style="left: 10%; width: 40px; height: 40px; animation-delay: 0s;"></span>
+    <span style="left: 20%; width: 60px; height: 60px; animation-delay: 3s;"></span>
+    <span style="left: 30%; width: 20px; height: 20px; animation-delay: 6s;"></span>
+    <span style="left: 40%; width: 50px; height: 50px; animation-delay: 9s;"></span>
+    <span style="left: 50%; width: 35px; height: 35px; animation-delay: 12s;"></span>
+    <span style="left: 60%; width: 55px; height: 55px; animation-delay: 5s;"></span>
+    <span style="left: 70%; width: 45px; height: 45px; animation-delay: 7s;"></span>
+    <span style="left: 80%; width: 30px; height: 30px; animation-delay: 2s;"></span>
+    <span style="left: 90%; width: 70px; height: 70px; animation-delay: 10s;"></span>
+  </div>
 
-        <form method="POST" action="{{ url_for('auth.signup') }}">
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input 
-                    type="text" 
-                    class="form-control" 
-                    id="username" 
-                    name="username" 
-                    required
-                    value="{{ request.form.username or '' }}"
-                >
-            </div>
+  <!-- Signup Card -->
+  <div class="container d-flex justify-content-center align-items-center">
+    <div class="signup-card shadow">
+      <div class="glow-heading">Community Pulse</div>
 
-            <div class="mb-3">
-                <label for="email" class="form-label">Email address</label>
-                <input 
-                    type="email" 
-                    class="form-control" 
-                    id="email" 
-                    name="email" 
-                    required
-                    value="{{ request.form.email or '' }}"
-                >
-            </div>
+      <h4 class="mb-3 text-center">Create Your Account</h4>
 
-            <div class="mb-3">
-                <label for="phone" class="form-label">Phone Number</label>
-                <input 
-                    type="tel" 
-                    class="form-control" 
-                    id="phone" 
-                    name="phone" 
-                    required
-                    value="{{ request.form.phone or '' }}"
-                >
-            </div>
+      <form method="POST" action="{{ url_for('auth.signup') }}">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="username" 
+            name="username" 
+            required
+            value="{{ request.form.username or '' }}"
+          >
+        </div>
 
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input 
-                    type="password" 
-                    class="form-control" 
-                    id="password" 
-                    name="password" 
-                    required
-                >
-            </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email address</label>
+          <input 
+            type="email" 
+            class="form-control" 
+            id="email" 
+            name="email" 
+            required
+            value="{{ request.form.email or '' }}"
+          >
+        </div>
 
-            <div class="mb-3">
-                <label for="confirm_password" class="form-label">Confirm Password</label>
-                <input 
-                    type="password" 
-                    class="form-control" 
-                    id="confirm_password" 
-                    name="confirm_password" 
-                    required
-                >
-            </div>
+        <div class="mb-3">
+          <label for="phone" class="form-label">Phone Number</label>
+          <input 
+            type="tel" 
+            class="form-control" 
+            id="phone" 
+            name="phone" 
+            required
+            value="{{ request.form.phone or '' }}"
+          >
+        </div>
 
-            {% if error %}
-                <div class="alert alert-danger">{{ error }}</div>
-            {% endif %}
-            {% if success %}
-                <div class="alert alert-success">{{ success }}</div>
-            {% endif %}
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input 
+            type="password" 
+            class="form-control" 
+            id="password" 
+            name="password" 
+            required
+          >
+        </div>
 
-            <button type="submit" class="btn btn-primary w-100">Sign Up</button>
-        </form>
+        <div class="mb-3">
+          <label for="confirm_password" class="form-label">Confirm Password</label>
+          <input 
+            type="password" 
+            class="form-control" 
+            id="confirm_password" 
+            name="confirm_password" 
+            required
+          >
+        </div>
 
-        <p class="mt-3 text-center">
-            Already have an account? <a href="{{ url_for('auth.login') }}">Login here</a>
-        </p>
+        {% if error %}
+          <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        {% if success %}
+          <div class="alert alert-success">{{ success }}</div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+      </form>
+
+      <p class="mt-3 text-center">
+        Already have an account? <a href="{{ url_for('auth.login') }}">Login here</a>
+      </p>
     </div>
-</div>
+  </div>
 
 </body>
 </html>
