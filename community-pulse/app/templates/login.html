@@ -1,123 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Login | Community Pulse</title>
-    <style>
-        /* Reset some default */
-        * {
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <title>Login | Community Pulse</title>
+  <style>
+    /* Base Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body, html {
-            height: 100%;
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    html, body {
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f9d3ff, #d3f1ff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
 
-        .login-container {
-            background: white;
-            padding: 2.5rem 3rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            width: 350px;
-            text-align: center;
-        }
+    /* Animated Background Bubbles */
+    .bubbles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+    }
 
-        h2 {
-            margin-bottom: 1.5rem;
-            color: #333;
-        }
+    .bubbles span {
+      position: absolute;
+      display: block;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: float 20s linear infinite;
+    }
 
-        label {
-            display: block;
-            text-align: left;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #555;
-        }
+    .bubbles span:nth-child(1) {
+      left: 10%;
+      animation-delay: 0s;
+    }
 
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 0.6rem 0.8rem;
-            margin-bottom: 1.2rem;
-            border: 1.5px solid #ccc;
-            border-radius: 5px;
-            font-size: 1rem;
-            transition: border-color 0.2s ease-in-out;
-        }
+    .bubbles span:nth-child(2) {
+      left: 25%;
+      animation-delay: 3s;
+      width: 60px;
+      height: 60px;
+    }
 
-        input[type="text"]:focus,
-        input[type="password"]:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 5px rgba(59,130,246,0.5);
-        }
+    .bubbles span:nth-child(3) {
+      left: 40%;
+      animation-delay: 6s;
+    }
 
-        button {
-            width: 100%;
-            padding: 0.7rem;
-            background-color: #3b82f6;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease-in-out;
-        }
+    .bubbles span:nth-child(4) {
+      left: 55%;
+      animation-delay: 9s;
+      width: 70px;
+      height: 70px;
+    }
 
-        button:hover {
-            background-color: #2563eb;
-        }
+    .bubbles span:nth-child(5) {
+      left: 70%;
+      animation-delay: 12s;
+    }
 
-        p {
-            margin-top: 1.2rem;
-            font-size: 0.9rem;
-            color: #555;
-        }
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) scale(0.5);
+        opacity: 0.4;
+      }
+      100% {
+        transform: translateY(-100vh) scale(1.2);
+        opacity: 0;
+      }
+    }
 
-        a {
-            color: #3b82f6;
-            text-decoration: none;
-            font-weight: 600;
-        }
+    /* Glowing Heading */
+    .heading {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 0 5px #f9a8d4, 0 0 10px #60a5fa, 0 0 20px #60a5fa;
+      animation: glow 2s ease-in-out infinite alternate;
+      text-align: center;
+      margin-bottom: 2rem;
+      z-index: 2;
+    }
 
-        a:hover {
-            text-decoration: underline;
-        }
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 5px #f9a8d4, 0 0 10px #60a5fa, 0 0 20px #60a5fa;
+      }
+      to {
+        text-shadow: 0 0 10px #ec4899, 0 0 20px #3b82f6, 0 0 30px #3b82f6;
+      }
+    }
 
-        .error-message {
-            color: #ef4444; /* red-500 */
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-    </style>
+    .login-container {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 2.5rem 2rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      width: 340px;
+      position: relative;
+      z-index: 2;
+      animation: floatIn 1s ease;
+    }
+
+    @keyframes floatIn {
+      0% {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    h2 {
+      color: #3b82f6;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      margin-bottom: 1rem;
+      border: 1.5px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #ec4899;
+      outline: none;
+      box-shadow: 0 0 5px rgba(236,72,153,0.5);
+    }
+
+    button {
+      width: 100%;
+      padding: 0.7rem;
+      background: linear-gradient(to right, #ec4899, #3b82f6);
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    button:hover {
+      transform: scale(1.03);
+    }
+
+    .error-message {
+      color: #ef4444;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      margin-top: 1.2rem;
+      font-size: 0.9rem;
+    }
+
+    a {
+      color: #ec4899;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Login</h2>
 
-        {% if error %}
-            <p class="error-message">{{ error }}</p>
-        {% endif %}
+  <div class="bubbles">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
 
-        <form method="POST">
-            <label for="email_or_username">Email or Username:</label>
-            <input type="text" name="email_or_username" id="email_or_username" required />
+  <div class="login-container">
+    <div class="heading">Community Pulse</div>
 
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password" required />
+    {% if error %}
+      <p class="error-message">{{ error }}</p>
+    {% endif %}
 
-            <button type="submit">Log In</button>
-        </form>
+    <form method="POST">
+      <label for="email_or_username">Email or Username:</label>
+      <input type="text" name="email_or_username" id="email_or_username" required />
 
-        <p>Don't have an account? <a href="{{ url_for('auth.signup') }}">Sign up</a></p>
-    </div>
+      <label for="password">Password:</label>
+      <input type="password" name="password" id="password" required />
+
+      <button type="submit">Log In</button>
+    </form>
+
+    <p>Don't have an account? <a href="{{ url_for('auth.signup') }}">Sign up</a></p>
+  </div>
+
 </body>
 </html>
