@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events Hub - Register & Browse</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #e8f4ff 30%, #d1e9ff 60%, #b3d9ff 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Floating particles animation */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            background: linear-gradient(45deg, #ff9ad5, #c3f0ff);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #ff9ad5, #c3f0ff);
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(255, 154, 213, 0.3);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            color: white;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 2;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.9);
+            margin-top: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Search and Filter Section */
+        .search-section {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 15px 35px rgba(255, 154, 213, 0.2);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 154, 213, 0.3);
+        }
+
+        .search-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(255, 154, 213, 0.3);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e8f4ff;
+            border-radius: 50px;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.8);
+            transition: all 0.3s ease;
+            min-width: 250px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #ff9ad5;
+            box-shadow: 0 0 20px rgba(255, 154, 213, 0.3);
+            transform: scale(1.02);
+        }
+
+        .filter-select {
+            padding: 1rem;
+            border: 2px solid #e8f4ff;
+            border-radius: 50px;
+            background: rgba(255,255,255,0.8);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #ff9ad5;
+            box-shadow: 0 0 20px rgba(255, 154, 213, 0.3);
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, #ff9ad5, #c3f0ff);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 154, 213, 0.3);
+        }
+
+        .search-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(255, 154, 213, 0.4);
+        }
+
+        /* Events Grid */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .event-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border: 1px solid rgba(255, 154, 213, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 154, 213, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .event-card:hover::before {
+            left: 100%;
+        }
+
+        .event-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 20px 40px rgba(255, 154, 213, 0.3);
+        }
+
+        .event-category {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff9ad5, #c3f0ff);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 154, 213, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 154, 213, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 154, 213, 0); }
+        }
+
+        .event-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .event-card:hover .event-title {
+            color: #ff9ad5;
+        }
+
+        .event-details {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff9ad5, #c3f0ff);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 154, 213, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 154, 213, 0.1);
+            color: #ff9ad5;
+            border: 2px solid #ff9ad5;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 10px 25px rgba(255, 154, 213, 0.4);
+        }
+
+        /* Section Headers */
+        .section-header {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #333;
+            margin: 3rem 0 2rem;
+            position: relative;
+            background: linear-gradient(135deg, #ff9ad5, #4a9eff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(135deg, #ff9ad5, #4a9eff);
+            border-radius: 2px;
+        }
+
+        /* Recent Bookmarks Section */
+        .bookmarks-section {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(232, 244, 255, 0.9));
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            padding: 2rem;
+            margin: 3rem 0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 154, 213, 0.3);
+        }
+
+        /* Registration Table */
+        .registration-section {
+            background: linear-gradient(135deg, rgba(232, 244, 255, 0.9), rgba(179, 217, 255, 0.9));
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            padding: 2rem;
+            margin: 3rem 0;
+            box-shadow: 0 25px 50px rgba(74, 158, 255, 0.2);
+            border: 1px solid rgba(74, 158, 255, 0.3);
+        }
+
+        .registration-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: rgba(255,255,255,0.9);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .registration-table th {
+            background: linear-gradient(135deg, #4a9eff, #2196f3);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .registration-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(74, 158, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .registration-table tr:hover td {
+            background: rgba(74, 158, 255, 0.05);
+            transform: scale(1.01);
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-confirmed {
+            background: linear-gradient(135deg, #4caf50, #81c784);
+            color: white;
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, #ff9800, #ffb74d);
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-bar {
+                flex-direction: column;
+            }
+            
+            .search-input {
+                min-width: 100%;
+            }
+            
+            .registration-table {
+                font-size: 0.8rem;
+            }
+            
+            .registration-table th,
+            .registration-table td {
+                padding: 0.5rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 154, 213, 0.3);
+            border-top: 5px solid #ff9ad5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Modal for Registration */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #ffeef8, #e8f4ff);
+            margin: 10% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            animation: modalSlide 0.3s ease-out;
+        }
+
+        @keyframes modalSlide {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #ff9ad5;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid rgba(255, 154, 213, 0.3);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff9ad5;
+            box-shadow: 0 0 15px rgba(255, 154, 213, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <h1>🎉 Registration Hub</h1>
+        <p>Discover, Register & Enjoy Amazing Live Events</p>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Search and Filter Section -->
+        <section class="search-section">
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Search events by name, location, or keyword..." id="searchInput">
+                <select class="filter-select" id="categoryFilter">
+                    <option value="">All Categories</option>
+                    <option value="garage-sale">Garage Sales</option>
+                    <option value="sports">Sports Matches</option>
+                    <option value="classes">Community Classes</option>
+                    <option value="volunteer">Volunteer Opportunities</option>
+                    <option value="exhibition">Exhibitions</option>
+                    <option value="festival">Festivals & Celebrations</option>
+                </select>
+                <button class="search-btn" onclick="searchEvents()">🔍 Search</button>
+            </div>
+        </section>
+
+        <!-- Loading Animation -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Loading amazing events...</p>
+        </div>
+
+        <!-- Browse Events Section -->
+        <h2 class="section-header">🌟 Live Events</h2>
+        <div class="events-grid" id="eventsGrid">
+            <!-- Event cards will be populated here -->
+        </div>
+
+        <!-- Recent Bookmarks Section -->
+        <section class="bookmarks-section">
+            <h2 class="section-header">💖 Recent Bookmarks</h2>
+            <div class="events-grid" id="bookmarksGrid">
+                <!-- Bookmarked events will be populated here -->
+            </div>
+        </section>
+
+        <!-- My Registrations Section -->
+        <section class="registration-section">
+            <h2 class="section-header">📝 My Event Registrations</h2>
+            <div style="overflow-x: auto;">
+                <table class="registration-table">
+                    <thead>
+                        <tr>
+                            <th>Event Name</th>
+                            <th>Category</th>
+                            <th>Date & Time</th>
+                            <th>Location</th>
+                            <th>Attendees</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="registrationTableBody">
+                        <tr>
+                            <td>Community Art Workshop</td>
+                            <td>Community Classes</td>
+                            <td>June 15, 2025 - 2:00 PM</td>
+                            <td>Art Center, Delhi</td>
+                            <td>2 people</td>
+                            <td><span class="status-badge status-confirmed">Confirmed</span></td>
+                            <td><button class="btn btn-secondary">View Details</button></td>
+                        </tr>
+                        <tr>
+                            <td>Local Cricket Match</td>
+                            <td>Sports Matches</td>
+                            <td>June 20, 2025 - 4:00 PM</td>
+                            <td>Sports Complex, Delhi</td>
+                            <td>1 person</td>
+                            <td><span class="status-badge status-confirmed">Confirmed</span></td>
+                            <td><button class="btn btn-secondary">View Details</button></td>
+                        </tr>
+                        <tr>
+                            <td>Neighborhood Cleanup Drive</td>
+                            <td>Volunteer Opportunities</td>
+                            <td>June 25, 2025 - 8:00 AM</td>
+                            <td>Central Park, Delhi</td>
+                            <td>3 people</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td><button class="btn btn-secondary">View Details</button></td>
+                        </tr>
+                        <tr>
+                            <td>Yoga in the Park</td>
+                            <td>Community Classes</td>
+                            <td>June 30, 2025 - 6:00 AM</td>
+                            <td>Lotus Temple Garden</td>
+                            <td>1 person</td>
+                            <td><span class="status-badge status-confirmed">Confirmed</span></td>
+                            <td><button class="btn btn-secondary">View Details</button></td>
+                        </tr>
+                        <tr>
+                            <td>Summer Music Festival</td>
+                            <td>Festivals & Celebrations</td>
+                            <td>July 5, 2025 - 6:00 PM</td>
+                            <td>India Gate Lawns</td>
+                            <td>4 people</td>
+                            <td><span class="status-badge status-confirmed">Confirmed</span></td>
+                            <td><button class="btn btn-secondary">View Details</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- Registration Modal -->
+    <div id="registrationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 style="text-align: center; color: #ff9ad5; margin-bottom: 1.5rem;">Register for Event</h2>
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label for="userName">Full Name *</label>
+                    <input type="text" id="userName" name="userName" required>
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Email Address *</label>
+                    <input type="email" id="userEmail" name="userEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="userPhone">Phone Number *</label>
+                    <input type="tel" id="userPhone" name="userPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="attendeeCount">Number of People (including you) *</label>
+                    <input type="number" id="attendeeCount" name="attendeeCount" min="1" max="10" value="1" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                    ✨ Register Now
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample events data
+        const eventsData = [
+            {
+                id: 1,
+                title: "Community Garage Sale Extravaganza",
+                category: "garage-sale",
+                categoryName: "Garage Sale",
+                date: "June 04, 2025",
+                time: "8:00 AM - 4:00 PM",
+                location: "Sector 15, Noida",
+                description: "Huge community garage sale with amazing deals on furniture, electronics, books, and more!",
+                organizer: "Noida Residents Association"
+            },
+            {
+                id: 2,
+                title: "Local Football Tournament",
+                category: "sports",
+                categoryName: "Sports Match",
+                date: "June 04, 2025",
+                time: "5:00 PM - 8:00 PM",
+                location: "Jawaharlal Nehru Stadium",
+                description: "Join us for an exciting local football tournament featuring teams from across Delhi NCR.",
+                organizer: "Delhi Sports Club"
+            },
+            {
+                id: 3,
+                title: "Watercolor Painting Workshop",
+                category: "classes",
+                categoryName: "Community Classes",
+                date: "June 05, 2025",
+                time: "10:00 AM - 1:00 PM",
+                location: "Art Gallery, Connaught Place",
+                description: "Learn the beautiful art of watercolor painting with professional artists.",
+                organizer: "Delhi Art Society"
+            },
+            {
+                id: 4,
+                title: "Tree Plantation Drive",
+                category: "volunteer",
+                categoryName: "Volunteer Opportunity",
+                date: "June 06, 2025",
+                time: "7:00 AM - 11:00 AM",
+                location: "Yamuna Riverbank",
+                description: "Help us make Delhi greener! Join our tree plantation drive and contribute to a cleaner environment.",
+                organizer: "Green Delhi Initiative"
+            },
+            {
+                id: 5,
+                title: "Photography Exhibition: Urban Life",
+                category: "exhibition",
+                categoryName: "Exhibition",
+                date: "June 05, 2025",
+                time: "11:00 AM - 7:00 PM",
+                location: "National Gallery of Modern Art",
+                description: "Stunning photography exhibition showcasing the vibrant urban life of Delhi.",
+                organizer: "Photography Society of India"
+            },
+            {
+                id: 6,
+                title: "Diwali Celebration & Cultural Show",
+                category: "festival",
+                categoryName: "Festival",
+                date: "June 04, 2025",
+                time: "6:00 PM - 10:00 PM",
+                location: "Red Fort Grounds",
+                description: "Grand Diwali celebration with cultural performances, food stalls, and fireworks display.",
+                organizer: "Delhi Cultural Committee"
+            },
+            {
+                id: 7,
+                title: "Tennis Championship - Beginners",
+                category: "sports",
+                categoryName: "Sports Match",
+                date: "June 04, 2025",
+                time: "8:00 AM - 12:00 PM",
+                location: "Delhi Lawn Tennis Association",
+                description: "Tennis championship for beginners. All skill levels welcome!",
+                organizer: "DLTA"
+            },
+            {
+                id: 8,
+                title: "Coding Workshop for Kids",
+                category: "classes",
+                categoryName: "Community Classes",
+                date: "June 05, 2025",
+                time: "2:00 PM - 5:00 PM",
+                location: "Tech Hub, Gurgaon",
+                description: "Fun coding workshop introducing kids to programming through games and interactive activities.",
+                organizer: "CodeKids India"
+            }
+        ];
+
+        // Sample bookmarked events (subset of eventsData)
+        const bookmarkedEvents = [2, 3, 5, 7, 1, 6, 4]; // Event IDs
+
+        let currentEvents = [...eventsData];
+        let currentModal = null;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            displayEvents(currentEvents);
+            displayBookmarks();
+            setupEventListeners();
+        });
+
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random size between 4px and 12px
+                const size = Math.random() * 8 + 4;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                // Random position
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                
+                // Random animation delay
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Display events in grid
+        function displayEvents(events) {
+            const grid = document.getElementById('eventsGrid');
+            grid.innerHTML = '';
+
+            events.forEach(event => {
+                const eventCard = createEventCard(event);
+                grid.appendChild(eventCard);
+            });
+        }
+
+        // Display bookmarked events
+        function displayBookmarks() {
+            const bookmarksGrid = document.getElementById('bookmarksGrid');
+            bookmarksGrid.innerHTML = '';
+
+            bookmarkedEvents.forEach(eventId => {
+                const event = eventsData.find(e => e.id === eventId);
+                if (event) {
+                    const eventCard = createEventCard(event, true);
+                    bookmarksGrid.appendChild(eventCard);
+                }
+            });
+        }
+
+        // Create event card element
+        function createEventCard(event, isBookmarked = false) {
+            const card = document.createElement('div');
+            card.className = 'event-card';
+            card.style.animationDelay = Math.random() * 0.5 + 's';
+
+            card.innerHTML = `
+                <div class="event-category">${event.categoryName}</div>
+                <h3 class="event-title">${event.title}</h3>
+                <div class="event-details">📅 ${event.date}</div>
+                <div class="event-details">⏰ ${event.time}</div>
+                <div class="event-details">📍 ${event.location}</div>
+                <div class="event-details">👥 Organized by ${event.organizer}</div>
+                <p style="margin: 1rem 0; color: #666; font-size: 0.9rem;">${event.description}</p>
+                <div class="event-actions">
+                    <button class="btn btn-primary" onclick="openRegistrationModal(${event.id})">
+                        ✨ Register Now
+                    </button>
+                    <button class="btn btn-secondary" onclick="toggleBookmark(${event.id}, this)">
+                        ${isBookmarked ? '💝 Bookmarked' : '💖 Notify- If same events happens again'}
+                    </button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Modal close functionality
+            const modal = document.getElementById('registrationModal');
+            const closeBtn = document.querySelector('.close');
+            
+            closeBtn.onclick = function() {
+                closeModal();
+            }
+            
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    closeModal();
+                }
+            }
+
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', debounce(searchEvents, 300));
+
+            // Category filter
+            const categoryFilter = document.getElementById('categoryFilter');
+            categoryFilter.addEventListener('change', searchEvents);
+
+            // Registration form submission
+            const registrationForm = document.getElementById('registrationForm');
+            registrationForm.addEventListener('submit', handleRegistration);
+        }
+
+        // Debounce function for search
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Search events function
+        function searchEvents() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            
+            // Show loading animation
+            showLoading();
+            
+            setTimeout(() => {
+                let filteredEvents = eventsData.filter(event => {
+                    const matchesSearch = !searchTerm || 
+                        event.title.toLowerCase().includes(searchTerm) ||
+                        event.description.toLowerCase().includes(searchTerm) ||
+                        event.location.toLowerCase().includes(searchTerm) ||
+                        event.organizer.toLowerCase().includes(searchTerm);
+                    
+                    const matchesCategory = !categoryFilter || event.category === categoryFilter;
+                    
+                    return matchesSearch && matchesCategory;
+                });
+
+                currentEvents = filteredEvents;
+                displayEvents(currentEvents);
+                hideLoading();
+            }, 800); // Simulate loading time
+        }
+
+        // Show loading animation
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('eventsGrid').style.opacity = '0.5';
+        }
+
+        // Hide loading animation
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('eventsGrid').style.opacity = '1';
+        }
+
+        // Open registration modal
+        function openRegistrationModal(eventId) {
+            const event = eventsData.find(e => e.id === eventId);
+            if (event) {
+                currentModal = eventId;
+                const modal = document.getElementById('registrationModal');
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+                
+                // Add some animation
+                setTimeout(() => {
+                    modal.querySelector('.modal-content').style.transform = 'scale(1)';
+                }, 10);
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            const modal = document.getElementById('registrationModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            currentModal = null;
+            
+            // Reset form
+            document.getElementById('registrationForm').reset();
+        }
+
+        // Handle registration form submission
+        function handleRegistration(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const registrationData = {
+                eventId: currentModal,
+                userName: formData.get('userName'),
+                userEmail: formData.get('userEmail'),
+                userPhone: formData.get('userPhone'),
+                attendeeCount: formData.get('attendeeCount')
+            };
+
+            // Show success animation
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '🎉 Registering...';
+            submitBtn.disabled = true;
+
+            setTimeout(() => {
+                submitBtn.innerHTML = '✅ Registration Successful!';
+                submitBtn.style.background = 'linear-gradient(135deg, #4caf50, #81c784)';
+                
+                setTimeout(() => {
+                    closeModal();
+                    showSuccessMessage();
+                    addToRegistrationTable(registrationData);
+                    
+                    // Reset button
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    submitBtn.style.background = 'linear-gradient(135deg, #ff9ad5, #c3f0ff)';
+                }, 1500);
+            }, 1000);
+        }
+
+        // Show success message
+        function showSuccessMessage() {
+            const successDiv = document.createElement('div');
+            successDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #4caf50, #81c784);
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+                z-index: 2000;
+                animation: slideIn 0.3s ease-out;
+                font-weight: bold;
+            `;
+            successDiv.innerHTML = '🎉 Registration Successful! Check your email for confirmation.';
+            
+            document.body.appendChild(successDiv);
+            
+            setTimeout(() => {
+                successDiv.style.animation = 'slideOut 0.3s ease-in forwards';
+                setTimeout(() => {
+                    document.body.removeChild(successDiv);
+                }, 300);
+            }, 3000);
+        }
+
+        // Add registration to table
+        function addToRegistrationTable(data) {
+            const event = eventsData.find(e => e.id === data.eventId);
+            if (!event) return;
+
+            const tableBody = document.getElementById('registrationTableBody');
+            const newRow = document.createElement('tr');
+            newRow.style.opacity = '0';
+            newRow.style.transform = 'translateY(20px)';
+            
+            newRow.innerHTML = `
+                <td>${event.title}</td>
+                <td>${event.categoryName}</td>
+                <td>${event.date} - ${event.time.split(' - ')[0]}</td>
+                <td>${event.location}</td>
+                <td>${data.attendeeCount} ${data.attendeeCount === '1' ? 'person' : 'people'}</td>
+                <td><span class="status-badge status-pending">Pending</span></td>
+                <td><button class="btn btn-secondary">View Details</button></td>
+            `;
+            
+            tableBody.insertBefore(newRow, tableBody.firstChild);
+            
+            // Animate the new row
+            setTimeout(() => {
+                newRow.style.transition = 'all 0.5s ease';
+                newRow.style.opacity = '1';
+                newRow.style.transform = 'translateY(0)';
+            }, 100);
+        }
+
+        // Toggle bookmark functionality
+        function toggleBookmark(eventId, button) {
+            const isBookmarked = bookmarkedEvents.includes(eventId);
+            
+            if (isBookmarked) {
+                const index = bookmarkedEvents.indexOf(eventId);
+                bookmarkedEvents.splice(index, 1);
+                button.innerHTML = '💖 Notify- If same event happend again';
+                button.style.background = 'rgba(255, 154, 213, 0.1)';
+            } else {
+                bookmarkedEvents.push(eventId);
+                button.innerHTML = '💝 Bookmarked';
+                button.style.background = 'linear-gradient(135deg, #ff9ad5, #c3f0ff)';
+                button.style.color = 'white';
+                
+                // Add pulse animation
+                button.style.animation = 'pulse 0.6s ease-out';
+                setTimeout(() => {
+                    button.style.animation = '';
+                }, 600);
+            }
+            
+            // Update bookmarks display
+            displayBookmarks();
+            
+            // Show feedback
+            showBookmarkFeedback(isBookmarked ? 'removed' : 'added');
+        }
+
+        // Show bookmark feedback
+        function showBookmarkFeedback(action) {
+            const feedback = document.createElement('div');
+            feedback.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #ff9ad5, #c3f0ff);
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 50px;
+                box-shadow: 0 15px 35px rgba(255, 154, 213, 0.4);
+                z-index: 2000;
+                font-weight: bold;
+                font-size: 1.1rem;
+                animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            `;
+            feedback.innerHTML = action === 'added' ? '💝 Added to Bookmarks!' : '💔 Removed from Bookmarks!';
+            
+            document.body.appendChild(feedback);
+            
+            setTimeout(() => {
+                feedback.style.animation = 'popOut 0.3s ease-in forwards';
+                setTimeout(() => {
+                    document.body.removeChild(feedback);
+                }, 300);
+            }, 1500);
+        }
+
+        // Add CSS animations for feedback
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            
+            @keyframes popIn {
+                0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+                100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            }
+            
+            @keyframes popOut {
+                0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                100% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Add smooth scrolling for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add intersection observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease-out forwards';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for scroll animations
+        setTimeout(() => {
+            document.querySelectorAll('.event-card, .section-header, .search-section, .bookmarks-section, .registration-section').forEach(el => {
+                observer.observe(el);
+            });
+        }, 100);
+
+        // Add fadeInUp animation
+        const fadeStyle = document.createElement('style');
+        fadeStyle.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(fadeStyle);
+
+        // Enhanced particle system - add more particles on scroll
+        let particleCount = 20;
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500 && particleCount < 30) {
+                for (let i = 0; i < 5; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    
+                    const size = Math.random() * 6 + 3;
+                    particle.style.width = size + 'px';
+                    particle.style.height = size + 'px';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.top = Math.random() * 100 + '%';
+                    particle.style.animationDelay = Math.random() * 6 + 's';
+                    particle.style.animationDuration = (Math.random() * 4 + 3) + 's';
+                    
+                    document.getElementById('particles').appendChild(particle);
+                    particleCount++;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
