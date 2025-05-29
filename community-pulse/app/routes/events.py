@@ -3,12 +3,14 @@ from app import db
 from app.models.interest import Interest
 from app.models.event import Event
 import requests
-
+from flask_login import login_required, current_user
+from datetime import datetime
 # Blueprint for events
 events_bp = Blueprint('event', __name__, url_prefix='/events')
 
 # Route to create a new event
 @events_bp.route('/create', methods=['GET', 'POST'])
+@login_required
 def create_event():
     if request.method == 'POST':
         new_event = Event(
@@ -16,7 +18,8 @@ def create_event():
             description=request.form['description'],
             category=request.form['category'],
             location=request.form['location'],
-            date=request.form['date']
+            date=datetime.strptime(request.form['date'], '%Y-%m-%d'),
+            user_id=current_user.id
         )
         db.session.add(new_event)
         db.session.commit()
@@ -36,6 +39,7 @@ def event_detail(event_id):
 
 # Route to register interest in an event
 @events_bp.route('/<int:event_id>/register', methods=['POST'])
+@login_required
 def register_interest(event_id):
     name = request.form['name']
     email = request.form['email']
