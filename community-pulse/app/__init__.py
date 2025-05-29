@@ -3,7 +3,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask_mail import Mail
-
+from flask_login import LoginManager
 
 from dotenv import load_dotenv
 import os
@@ -13,7 +13,7 @@ db=SQLAlchemy()
 jwt=JWTManager()
 mail=Mail()
 cors = CORS()
-
+login_manager=LoginManager()
 def create_app():
     load_dotenv() #load .env variables
     
@@ -24,6 +24,14 @@ def create_app():
     jwt.init_app(app)
     mail.init_app(app)
     cors.init_app(app)
+    login_manager.init_app(app)
+    
+    login_manager.login_view="auth.login" #if not logged in user tries to access a @login_req route, redirect here
+    
+    from .models.user import User
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
     
    
         

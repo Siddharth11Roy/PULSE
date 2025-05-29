@@ -2,7 +2,7 @@
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import generate_password_hash,check_password_hash
-
+from flask_login import login_user,logout_user,login_required,current_user
 
 
 
@@ -57,10 +57,16 @@ def login():
         ).first()
 
         if user and check_password_hash(user.password, password):
-            session['user_id'] = user.id
-            session['username'] = user.username
+            login_user(user) #loggs the user in and stores their id
             return redirect("/")  
         else:
             return render_template("login.html", error="Invalid credentials.")
 
     return render_template("login.html")
+
+
+@auth_bp.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect("/")

@@ -21,7 +21,7 @@ def create_event():
         db.session.add(new_event)
         db.session.commit()
         return redirect(url_for('event.list_events'))
-    return render_template('create_event.html')
+    return render_template('create_events.html')
 
 # 🛠 Fixed: Route to browse all events
 @events_bp.route('/')
