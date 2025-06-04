@@ -38,6 +38,11 @@ def event_detail(event_id):
     return render_template('event_detail.html', event=event)
 
 # Route to register interest in an event
+
+@events_bp.route('/register',methods=["GET"])
+@login_required
+def register_event():
+    return render_template('Register.html')
 @events_bp.route('/<int:event_id>/register', methods=['POST'])
 @login_required
 def register_interest(event_id):
