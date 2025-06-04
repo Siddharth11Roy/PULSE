@@ -21,10 +21,11 @@ if __name__ == "__main__":
         user = User.query.filter_by(phone="1234567890").first()
         if not user:
             user = User(
-                username="john_doe",
-                email="john@example.com",
+                username="admin",
+                email="admin@example.com",
                 phone="1234567890",
-                password="test123"
+                password="admin123",
+                role="admin"
             )
             db.session.add(user)
             db.session.commit()

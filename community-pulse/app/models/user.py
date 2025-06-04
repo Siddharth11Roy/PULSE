@@ -8,7 +8,7 @@ class User(db.Model,UserMixin):
     phone=db.Column(db.String(20),unique=True,nullable=False)
     password=db.Column(db.String(120),nullable=False)
     is_verified=db.Column(db.Boolean,default=False)
-    is_admin=db.Column(db.Boolean,default=False)
+    role = db.Column(db.String(10), default='user')  # 'user' or 'admin'
     
     
     events=db.relationship("Event",backref="user")

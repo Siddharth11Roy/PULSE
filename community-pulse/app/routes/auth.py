@@ -18,6 +18,7 @@ def signup():
         phone = request.form['phone'].strip()
         password = request.form['password']
         confirm_password = request.form['confirm_password']
+        
 
         # Password match check
         if password != confirm_password:
@@ -34,6 +35,7 @@ def signup():
             email=email,
             phone=phone,
             password=hashed_pw,
+            role="user"
         )
 
         db.session.add(new_user)
@@ -56,11 +58,15 @@ def login():
             (User.email == email_or_username) | (User.username == email_or_username)
         ).first()
 
-        if user and check_password_hash(user.password, password):
-            login_user(user) #loggs the user in and stores their id
-            return redirect("/")  
+        
+        if user.role=="admin":
+            login_user(user)
+            return redirect("/admin/dashboard")
         else:
-            return render_template("login.html", error="Invalid credentials.")
+            login_user(user)
+            return redirect("/")
+        
+        return render_template("login.html", error="Invalid email or username.")
 
     return render_template("login.html")
 
