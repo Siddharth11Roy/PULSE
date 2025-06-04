@@ -9,7 +9,7 @@ class Event(db.Model):
     category = db.Column(db.String(50))
     date = db.Column(db.DateTime, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
+    is_verified = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
     interests = db.relationship("Interest", backref="event", lazy=True)
